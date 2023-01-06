@@ -51,5 +51,37 @@ def receive():
         thread.start()
 
 
+def send():
+    msg = input("Message: ")
+    message = f'Server: {msg}'
+    broadcast(message.encode('utf-8'))
+
+
+def list_clients():
+    for alias in aliases:
+        print(alias)
+
+
+def close_server():
+    broadcast("Stoping".encode('utf-8'))
+    raise Exception("Server closed!")
+
+
+def choices():
+    while True:
+        c = input("1- message\n2-list_clients\n3-stop_server")
+        if c == "1":
+            send()
+        elif c == "2":
+            list_clients()
+        else:
+            close_server()
+            break
+
+
 if __name__ == "__main__":
-    receive()
+    receive_thread = threading.Thread(target=receive)
+    receive_thread.start()
+
+    choices_thread = threading.Thread(target=choices)
+    choices_thread.start()
